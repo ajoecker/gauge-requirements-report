@@ -53,6 +53,52 @@ The report is in JSON format and shows for each identified tag a list of scenari
 In addition, when the `gauge.requirements.ids` property is present, it contains all ids, that are part of thie list,
 for which no scenarios have been found. This means, that there are requirements without a test case existing.
 
+An example report
+
+```
+{
+  "requirements": [
+    {
+      "id": "SONAR-10562",
+      "link": "https://jira.sonarsource.com/browse/SONAR-10562",
+      "testResults": [
+        {
+          "id": "",
+          "heading": "Vowel counts in single word",
+          "executionTime": 3,
+          "status": "PASSED"
+        }
+      ],
+      "total": 1,
+      "passed": 1
+    },
+    {
+      "id": "SONAR-10561",
+      "link": "https://jira.sonarsource.com/browse/SONAR-10561",
+      "testResults": [
+        {
+          "id": "",
+          "heading": "Vowel counts in single word",
+          "executionTime": 3,
+          "status": "PASSED"
+        },
+        {
+          "id": "",
+          "heading": "Vowel counts in multiple word",
+          "executionTime": 0,
+          "status": "PASSED"
+        }
+      ],
+      "total": 2,
+      "passed": 2
+    }
+  ],
+  "missingIds": [
+    "SONAR-10565"
+  ]
+}
+```
+
 # License
 
 MIT.
