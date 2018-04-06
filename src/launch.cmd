@@ -1,0 +1,1 @@
+java -jar bin/gauge-requirements-report.jar

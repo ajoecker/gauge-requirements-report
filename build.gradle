@@ -1,0 +1,63 @@
+import groovy.json.JsonSlurper
+
+group 'org.gauge.plugin'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.3.1'
+    compile group: 'com.thoughtworks.gauge', name: 'gauge-api-client', version: '1.0.7'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
+    compile group: 'com.google.guava', name: 'guava', version: '21.0'
+}
+
+jar {
+    manifest {
+        attributes('Main-Class': 'org.gauge.plugin.requirements.RequirementsReport',
+                'Class-Path': configurations.runtime.collect { "../libs/" + it.getName() }.join(' '))
+    }
+}
+
+task distro(type: Zip) {
+    copy {
+        from configurations.compile
+        into 'deploy/libs'
+    }
+    copy {
+        from 'src'
+        into 'deploy'
+        include 'launch.*'
+        include 'plugin.json'
+    }
+
+    copy {
+        from 'build/libs'
+        into 'deploy/bin'
+        include '*.jar'
+        rename { String fileName ->
+            fileName.replace("-${project.version.toString()}", '')
+        }
+    }
+
+    def jsonFile = file('src/plugin.json')
+    def parsedJson = new JsonSlurper().parseText(jsonFile.text)
+
+    archiveName = "${project.name}-${parsedJson.version}.zip"
+    destinationDir = file('artifacts')
+    from 'deploy'
+    include '**/*'
+    exclude "*.zip"
+    includeEmptyDirs = false
+}
+
+clean.doFirst {
+    delete 'deploy'
+    delete 'artifacts'
+}
